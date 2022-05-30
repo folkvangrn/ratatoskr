@@ -1,0 +1,51 @@
+@forward 'mixins';
+@forward 'variables';
+@forward 'reset';
+
+@use 'mixins';
+
+.textFieldWrapper {
+  @include mixins.flexCenter;
+  flex-direction: column;
+  width: 300px;
+  margin-bottom: 25px;
+}
+
+.inputWrapper,
+.textAreaWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  label {
+    width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 180%;
+    padding: 7px 0 7px 7px;
+    border-radius: 5px;
+    border: 1px solid var(--blue);
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.textAreaWrapper {
+  align-items: flex-start;
+  textarea {
+    height: 200px;
+    resize: none;
+  }
+}
+
+.errorMessage {
+  margin-top: 5px;
+  color: var(--error);
+  font-size: 14px;
+}
