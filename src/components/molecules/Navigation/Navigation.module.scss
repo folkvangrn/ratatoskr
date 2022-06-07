@@ -1,0 +1,30 @@
+.navigationWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  grid-column: 1/1;
+  grid-row: 1/3;
+}
+
+.navbarItem {
+  padding: 15px 0 15px 20px;
+  background-color: rgb(54, 205, 247, 0.15);
+  color: var(--blue);
+  width: 90%;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+
+  p {
+    font-size: 20px;
+  }
+}
+
+.navLink {
+  text-decoration: none;
+
+  &:focus,
+  &:visited {
+    color: var(--blue);
+  }
+}
