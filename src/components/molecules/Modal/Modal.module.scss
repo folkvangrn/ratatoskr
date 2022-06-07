@@ -1,0 +1,41 @@
+@use '@/styles/mixins';
+
+.modalWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  width: 85vh;
+  border: 1px solid var(--blue);
+  background-color: var(--white);
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.modalHeader {
+  @include mixins.flexCenter;
+  height: 15%;
+  background-color: var(--blue);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  h3 {
+    font-weight: bold;
+    font-size: 36px;
+    color: var(--white);
+    letter-spacing: 2px;
+  }
+}
+
+.modalContent {
+  @include mixins.flexCenter;
+  justify-content: space-evenly;
+  flex-direction: column;
+  height: 85%;
+  background-color: var(--white);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
