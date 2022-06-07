@@ -1,0 +1,12 @@
+.defaultButton {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: var(--darkGrey);
+  color: var(--white);
+  transition: 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--blue);
+  }
+}
