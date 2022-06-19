@@ -8,7 +8,7 @@ import { useGet } from '@/hooks/useGet';
 type GenericCreateForm<T> = {
   isOpen: boolean;
   handleCloseModal: VoidFunction;
-  children: ReactNode[];
+  children: ReactNode[] | ReactNode;
   singularName: string;
   validationSchema: any;
   initialFormValues: T;
@@ -45,6 +45,7 @@ export function GenericCreateForm<T>({
   };
 
   const handleSubmitForm = async (values: any) => {
+    console.log(values);
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(query, {

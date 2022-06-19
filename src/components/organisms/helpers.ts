@@ -3,7 +3,6 @@ export const filterBySearchingPhrase = (
   fields: any[]
 ): boolean => {
   if (searchingPhrase === '') return true;
-
   return fields.some(field =>
     field.toLowerCase().includes(searchingPhrase.toLowerCase())
   );
