@@ -33,6 +33,9 @@ export function AddIngredient({
       singularName="Ingredient"
       validationSchema={Yup.object({
         name: Yup.string().required('Required'),
+        quantity: Yup.number()
+          .integer()
+          .min(1, 'Quantity must be equal or greater than 1'),
       })}
       refetchData={refetchIngredients}
       query={
@@ -42,7 +45,7 @@ export function AddIngredient({
       }
     >
       <TextFieldInput label="Name" name="name" />
-      <TextFieldInput label="Quantity" name="quantity" type="number" />
+      <TextFieldInput label="Quantity" name="quantity" type="number" min={1} />
     </GenericCreateForm>
   );
 }
