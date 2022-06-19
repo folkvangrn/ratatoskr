@@ -29,11 +29,10 @@ export function ClientListItem({
       <ListItemElements componentsArray={componentsArray} />
       {isModalOpen ? (
         <AddClient
-          refetchClients={() => {}} //add method to
           isOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
           clientId={client.id}
-          //   refetchClients={refetchClients}
+          refetchClients={refetchClients}
         />
       ) : null}
     </>
