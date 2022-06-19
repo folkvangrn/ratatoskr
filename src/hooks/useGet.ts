@@ -13,15 +13,14 @@ export const useGet = <T extends any>({ query, skip }: UseGetArgs) => {
 
   const getData = useCallback(async (refetchQuery?: string) => {
     if (skip) return;
+
     const GET_QUERY = refetchQuery || query;
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.get(GET_QUERY, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.data;
