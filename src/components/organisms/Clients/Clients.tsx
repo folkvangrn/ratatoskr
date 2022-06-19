@@ -19,18 +19,21 @@ export function Clients() {
       lastName: 'nazwisko',
       phoneNumber: 'phonenr',
       address: 'address',
+      id: 2,
     },
     {
       firstName: 'lala',
       lastName: 'nazwisko',
       phoneNumber: 'phonenr',
       address: 'address',
+      id: 5,
     },
     {
       firstName: 'oke',
       lastName: 'nazwisko',
       phoneNumber: 'phonenr',
       address: 'address',
+      id: 10,
     },
   ];
 

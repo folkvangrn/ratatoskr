@@ -15,8 +15,8 @@ export function OrderListItem({ order, refetchOrders }: OrderListItemProps) {
   const { isModalOpen, handleCloseModal, handleOpenModal } = useModal(false);
 
   const componentsArray = [
-    <p>{order.id}</p>,
-    <p>{order.totalPrice}</p>,
+    <p>Order id: {order.id}</p>,
+    <p>Price: {order.totalPrice}</p>,
     <Button text="Edit" onClick={handleOpenModal} />,
     <Button text="Delete" onClick={() => {}} />,
   ];

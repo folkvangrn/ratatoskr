@@ -6,6 +6,7 @@ import { Grid } from '@material-ui/core';
 import { Modal } from '@/components/molecules/Modal/Modal';
 import { Ingredient } from '@/types';
 import { SelectFieldInput } from '@/components/atoms/SelectFieldInput/SelectFieldInput';
+import { useState } from 'react';
 
 type AddMealProps = {
   isOpen: boolean;
@@ -42,6 +43,29 @@ export function AddMeal({
     availability: true,
   };
 
+  const DiscountForm = () => {
+    const [discount, setDiscount] = useState(0);
+
+    return (
+      <div onSubmit={val => {}}>
+        <label htmlFor="discount">Discount</label>
+        <input
+          type="number"
+          id="discount"
+          value={discount}
+          min={0}
+          onChange={e => setDiscount(Number(e.target.value))}
+        />
+        <Button
+          text="Submit discount"
+          onClick={() => {
+            console.log('xd', discount);
+          }}
+        />
+      </div>
+    );
+  };
+
   return (
     <Modal
       headerText={!mealId ? 'Add Meal' : 'Edit Meal'}
@@ -61,7 +85,7 @@ export function AddMeal({
         initialValues={initialData}
       >
         {({ values, errors }) => (
-          <Form>
+          <Form style={{ overflowY: 'scroll' }}>
             <TextFieldInput label="Name" name="name" />
             <TextFieldInput label="Price" name="price" type="number" min={1} />
             <SelectFieldInput label="Availability" name="availability">
@@ -72,6 +96,7 @@ export function AddMeal({
                 No
               </option>
             </SelectFieldInput>
+            <DiscountForm />
             <FieldArray name="ingredients">
               {({ push, remove }) => (
                 <>
