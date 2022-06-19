@@ -2,24 +2,21 @@ import { useModal } from '@/hooks/useModal';
 
 import { Button } from '@/components/atoms/Button/Button';
 
-import { Client } from '@/types/Client';
 import { ListItemElements } from '@/components/atoms/ListItemElements/ListItemElements';
-import { AddClient } from './AddClient';
+import { AddMeal } from './AddMeal';
+import { Meal } from '@/types';
 
-type ClientListItemProps = {
-  client: Client;
-  refetchClients: VoidFunction;
+type MealListItemProps = {
+  meal: Meal;
+  refetchMeals: VoidFunction;
 };
 
-export function ClientListItem({
-  client,
-  refetchClients,
-}: ClientListItemProps) {
+export function MealListItem({ meal, refetchMeals }: MealListItemProps) {
   const { isModalOpen, handleCloseModal, handleOpenModal } = useModal(false);
 
   const componentsArray = [
-    <p>{`${client.firstName} ${client.lastName}`}</p>,
-    <p>{client.phoneNumber}</p>,
+    <p>{meal.name}</p>,
+    <p>Price: {meal.price}</p>,
     <Button text="Edit" onClick={handleOpenModal} />,
     <Button text="Delete" onClick={() => {}} />,
   ];
@@ -28,11 +25,11 @@ export function ClientListItem({
     <>
       <ListItemElements componentsArray={componentsArray} />
       {isModalOpen ? (
-        <AddClient
+        <AddMeal
+          refetchMeals={refetchMeals} //add method to
           isOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
-          clientId={client.id}
-          refetchClients={refetchClients}
+          mealId={meal.id}
         />
       ) : null}
     </>

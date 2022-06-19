@@ -5,7 +5,7 @@ import styles from './FormWrapper.module.scss';
 import { FormButtons } from '../FormButtons/FormButtons';
 
 type FormWrapperProps = {
-  children: ReactNode[];
+  children: ReactNode[] | ReactNode;
   handleCloseForm: VoidFunction;
 };
 
