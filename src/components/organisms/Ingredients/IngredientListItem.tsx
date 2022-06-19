@@ -3,20 +3,23 @@ import { useModal } from '@/hooks/useModal';
 import { Button } from '@/components/atoms/Button/Button';
 
 import { ListItemElements } from '@/components/atoms/ListItemElements/ListItemElements';
-import { AddOrder } from './AddOrder';
-import { Order } from '@/types/Order';
+import { AddIngredient } from './AddIngredient';
+import { Ingredient } from '@/types';
 
-type OrderListItemProps = {
-  order: Order;
-  refetchOrders: VoidFunction;
+type IngredientListItemProps = {
+  ingredient: Ingredient;
+  refetchIngredients: VoidFunction;
 };
 
-export function OrderListItem({ order, refetchOrders }: OrderListItemProps) {
+export function IngredientListItem({
+  ingredient,
+  refetchIngredients,
+}: IngredientListItemProps) {
   const { isModalOpen, handleCloseModal, handleOpenModal } = useModal(false);
 
   const componentsArray = [
-    <p>{order.id}</p>,
-    <p>{order.totalPrice}</p>,
+    <p>{ingredient.name}</p>,
+    <p>Quantity: {ingredient.quantity}</p>,
     <Button text="Edit" onClick={handleOpenModal} />,
     <Button text="Delete" onClick={() => {}} />,
   ];
@@ -25,11 +28,11 @@ export function OrderListItem({ order, refetchOrders }: OrderListItemProps) {
     <>
       <ListItemElements componentsArray={componentsArray} />
       {isModalOpen ? (
-        <AddOrder
-          refetchOrders={refetchOrders} //add method to
+        <AddIngredient
+          refetchIngredients={refetchIngredients} //add method to
           isOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
-          orderId={order.id}
+          ingredientId={ingredient.id}
         />
       ) : null}
     </>

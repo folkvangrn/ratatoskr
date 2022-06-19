@@ -1,11 +1,11 @@
-import * as Yup from 'yup';
-
 import { TextFieldInput } from '@/components/atoms/TextFieldInput/TextFieldInput';
-import { Meal, Order } from '@/types/Order';
+
 import { Button } from '@/components/atoms/Button/Button';
-import { Field, FieldArray, Form, Formik, useField } from 'formik';
+import { FieldArray, Form, Formik } from 'formik';
 import { Card, CardContent, Grid } from '@material-ui/core';
 import { Modal } from '@/components/molecules/Modal/Modal';
+import { Meal } from '@/types';
+
 type AddClientProps = {
   isOpen: boolean;
   handleCloseModal: VoidFunction;
@@ -15,30 +15,6 @@ type AddClientProps = {
 
 const GET_ORDERS_QUERY = 'http://localhost:8000/api/clients';
 
-const Dupa = ({ fieldHandler }: { fieldHandler: any }) => {
-  return fieldHandler.form.values.length === 0
-    ? null
-    : fieldHandler.form.values?.meals.map((val: Meal, index: number) => {
-        return (
-          <>
-            <TextFieldInput name={`meals.${index}.name`} label="Name" />
-            <TextFieldInput name={`meals.${index}.price`} label="Price" />
-            <TextFieldInput
-              name={`meals[${index}].availability`}
-              label="Availability"
-            />
-            <Button
-              text="Remove"
-              type="button"
-              onClick={() => {
-                console.log('fh', fieldHandler);
-                fieldHandler.remove(index);
-              }}
-            />
-          </>
-        );
-      });
-};
 export function AddOrder({
   isOpen,
   handleCloseModal,
