@@ -15,10 +15,10 @@ export function Ingredients() {
     {
       id: 22,
       name: 'Bekon',
-      quantity: 10,
+      quantity: 11,
     },
     {
-      id: 22,
+      id: 23,
       name: 'Ser',
       quantity: 10,
     },
@@ -35,7 +35,7 @@ export function Ingredients() {
     <Dashboard>
       <ListWrapper
         handleOpenModal={handleOpenModal}
-        singularName="Order"
+        singularName="Ingredient"
         handleChangeSearchInput={setSearchingPhrase}
       >
         {isModalOpen ? (
