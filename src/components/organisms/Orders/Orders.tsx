@@ -17,6 +17,9 @@ export function Orders() {
       id: 11,
       totalPrice: 22,
       meals: [],
+      client: {
+        id: 25,
+      },
     },
     {
       id: 13,
