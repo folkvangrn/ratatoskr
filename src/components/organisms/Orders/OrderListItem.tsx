@@ -6,12 +6,12 @@ import { ListItemElements } from '@/components/atoms/ListItemElements/ListItemEl
 import { AddOrder } from './AddOrder';
 import { Order } from '@/types/Order';
 
-type ClientListItemProps = {
+type OrderListItemProps = {
   order: Order;
   refetchOrders: VoidFunction;
 };
 
-export function OrderListItem({ order, refetchOrders }: ClientListItemProps) {
+export function OrderListItem({ order, refetchOrders }: OrderListItemProps) {
   const { isModalOpen, handleCloseModal, handleOpenModal } = useModal(false);
 
   const componentsArray = [
