@@ -17,7 +17,7 @@ const NavbarItem = ({ path }: NavbarItemProps) => {
 };
 
 export function Navigation() {
-  const paths = ['orders', 'clients'];
+  const paths = ['orders', 'ingredients', 'meals', 'clients'];
 
   return (
     <div className={styles.navigationWrapper}>
