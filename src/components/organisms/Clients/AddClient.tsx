@@ -27,7 +27,6 @@ export function AddClient({
     query: `${GET_CLIENTS_QUERY}/${clientId}`,
     skip: !clientId,
   });
-  console.log(client);
 
   const initialValues: Client = {
     name: '',
