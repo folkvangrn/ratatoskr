@@ -3,13 +3,16 @@ import { useModal } from '@/hooks/useModal';
 import { Button } from '@/components/atoms/Button/Button';
 
 import { ListItemElements } from '@/components/atoms/ListItemElements/ListItemElements';
-import { AddIngredient } from './AddIngredient';
 import { Ingredient } from '@/types';
+import { AddIngredient } from './AddIngredient';
+import { handleDeleteEntity } from '../helpers';
 
 type IngredientListItemProps = {
   ingredient: Ingredient;
   refetchIngredients: VoidFunction;
 };
+const GET_INGREDIENTS_QUERY =
+  'http://localhost:8080/take/restaurant/ingredient';
 
 export function IngredientListItem({
   ingredient,
@@ -21,7 +24,15 @@ export function IngredientListItem({
     <p>{ingredient.name}</p>,
     <p>Quantity: {ingredient.quantity}</p>,
     <Button text="Edit" onClick={handleOpenModal} />,
-    <Button text="Delete" onClick={() => {}} />,
+    <Button
+      text="Delete"
+      onClick={() =>
+        handleDeleteEntity({
+          query: `${GET_INGREDIENTS_QUERY}/${ingredient.id}`,
+          afterDeleteFn: refetchIngredients,
+        })
+      }
+    />,
   ];
 
   return (
