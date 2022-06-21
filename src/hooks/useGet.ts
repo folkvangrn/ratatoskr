@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
+import { useCallback, useEffect, useState } from 'react';
 
 type UseGetArgs = {
   query: string;
@@ -24,6 +24,7 @@ export const useGet = <T extends any>({ query, skip }: UseGetArgs) => {
         },
       });
       const data = await response.data;
+      console.log(data)
       if (data?.status !== 200) {
         setData(data);
       } else {

@@ -7,3 +7,29 @@ export const filterBySearchingPhrase = (
     field.toLowerCase().includes(searchingPhrase.toLowerCase())
   );
 };
+
+type useDeleteProps = {
+  query: string;
+  afterDeleteFn: VoidFunction;
+};
+
+export const handleDeleteEntity = async ({
+  query,
+  afterDeleteFn,
+}: useDeleteProps) => {
+  try {
+    const response = await fetch(query, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    const status = await response.status;
+    if (status.toString().startsWith('2')) {
+      afterDeleteFn();
+    } else {
+      alert('Something went wrong!');
+    }
+  } catch (e) {}
+};

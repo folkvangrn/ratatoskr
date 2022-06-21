@@ -1,47 +1,29 @@
 import { Dashboard } from '@/components/molecules/Dashboard/Dashboard';
 import { ListWrapper } from '@/components/molecules/ListWrapper/ListWrapper';
+import { useGet } from '@/hooks/useGet';
 import { useModal } from '@/hooks/useModal';
-import { Client } from '@/types/Client';
+import { Client } from '@/types';
 import { useState } from 'react';
 import { filterBySearchingPhrase } from '../helpers';
 import { AddClient } from './AddClient';
 import { ClientListItem } from './ClientListItem';
 
+const GET_CLIENTS_QUERY = 'http://localhost:8080/take/restaurant/client';
+
 export function Clients() {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
   const [searchingPhrase, setSearchingPhrase] = useState<string>('');
 
+  const {
+    data: clients = [],
+    error,
+    isLoading,
+    refetchData: refetchClients,
+  } = useGet<Client[]>({ query: GET_CLIENTS_QUERY });
+
   document.title = 'Clients';
-
-  const clients: Client[] = [
-    {
-      firstName: 'imie',
-      lastName: 'nazwisko',
-      phoneNumber: 'phonenr',
-      address: 'address',
-      id: 2,
-    },
-    {
-      firstName: 'lala',
-      lastName: 'nazwisko',
-      phoneNumber: 'phonenr',
-      address: 'address',
-      id: 5,
-    },
-    {
-      firstName: 'oke',
-      lastName: 'nazwisko',
-      phoneNumber: 'phonenr',
-      address: 'address',
-      id: 10,
-    },
-  ];
-
   const filteredClients = clients?.filter(client =>
-    filterBySearchingPhrase(searchingPhrase, [
-      client.firstName,
-      client.lastName,
-    ])
+    filterBySearchingPhrase(searchingPhrase, [client.name, client.surname])
   );
 
   return (
@@ -55,13 +37,13 @@ export function Clients() {
           <AddClient
             isOpen={isModalOpen}
             handleCloseModal={handleCloseModal}
-            refetchClients={() => {}} //TODO: Add refetchClients method
+            refetchClients={refetchClients}
           />
         ) : null}
-        {filteredClients.map(client => (
+        {(filteredClients || []).map(client => (
           <ClientListItem
             client={client}
-            refetchClients={() => {}}
+            refetchClients={refetchClients}
             key={client.id}
           />
         ))}

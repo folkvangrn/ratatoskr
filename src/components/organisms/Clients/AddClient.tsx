@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 
 import { TextFieldInput } from '@/components/atoms/TextFieldInput/TextFieldInput';
 import { GenericCreateForm } from '@/components/molecules/GenericCreateForm/GenericCreateForm';
+import { useGet } from '@/hooks/useGet';
 import { Client } from '@/types/Client';
 
 type AddClientProps = {
@@ -11,41 +12,52 @@ type AddClientProps = {
   refetchClients: VoidFunction;
 };
 
-const GET_CLIENTS_QUERY = 'http://localhost:8000/api/clients';
-
+const GET_CLIENTS_QUERY = 'http://localhost:8080/take/restaurant/client';
 export function AddClient({
   isOpen,
   handleCloseModal,
   clientId,
   refetchClients,
 }: AddClientProps) {
+  const {
+    data: client,
+    error,
+    isLoading,
+  } = useGet<Client>({
+    query: `${GET_CLIENTS_QUERY}/${clientId}`,
+    skip: !clientId,
+  });
+  console.log(client);
+
   const initialValues: Client = {
-    firstName: '',
-    lastName: '',
+    name: '',
+    surname: '',
     address: '',
-    phoneNumber: '',
+    email: '',
   };
+
+  const initialData = clientId ? client : initialValues;
 
   return (
     <GenericCreateForm
       isOpen={isOpen}
       handleCloseModal={handleCloseModal}
       initialId={clientId}
-      initialFormValues={initialValues}
+      initialFormValues={initialData}
       singularName="Client"
       validationSchema={Yup.object({
-        firstName: Yup.string().required('Required'),
-        lastName: Yup.string().required('Required'),
+        name: Yup.string().required('Required'),
+        surname: Yup.string().required('Required'),
         address: Yup.string().required('Required'),
-        phoneNumber: Yup.string().required('Required'),
+        email: Yup.string().required('Required'),
       })}
       refetchData={refetchClients}
-      query={clientId ? `${GET_CLIENTS_QUERY}/${clientId}` : GET_CLIENTS_QUERY}
+      query={GET_CLIENTS_QUERY}
     >
-      <TextFieldInput label="First name" name="firstName" />
-      <TextFieldInput label="Last name" name="lastName" />
+      <TextFieldInput label="Name" name="name" />
+      <TextFieldInput label="Surname" name="surname" />
       <TextFieldInput label="Address" name="address" />
-      <TextFieldInput label="Phone number" name="phoneNumber" />
+      <TextFieldInput label="Email" name="email" />
     </GenericCreateForm>
   );
 }

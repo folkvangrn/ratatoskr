@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
 import { Formik } from 'formik';
+import { ReactNode } from 'react';
 
-import { Modal } from '@/components/molecules/Modal/Modal';
 import { FormWrapper } from '@/components/atoms/FormWrapper/FormWrapper';
+import { Modal } from '@/components/molecules/Modal/Modal';
 import { useGet } from '@/hooks/useGet';
 
 type GenericCreateForm<T> = {
@@ -47,7 +47,6 @@ export function GenericCreateForm<T>({
   const handleSubmitForm = async (values: any) => {
     console.log(values);
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch(query, {
         method: !initialId ? 'POST' : 'PUT',
         headers: {
@@ -56,7 +55,7 @@ export function GenericCreateForm<T>({
         },
         body: JSON.stringify({ ...values }),
       });
-      if (response.status === 200) handleAfterCreate();
+      if (response.status.toString().startsWith('2')) handleAfterCreate();
       else {
         console.error('something went wrong!');
       }
