@@ -177,7 +177,8 @@ export function AddMeal({
             'Unique',
             'Values need te be unique',
             values => {
-              return new Set(values).size <= ingredients?.length;
+              const ings = values?.map(ing => Number(ing?.ingredient));
+              return new Set(ings).size === values?.length!;
             }
           ),
         })}
