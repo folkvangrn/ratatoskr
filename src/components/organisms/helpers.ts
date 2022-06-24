@@ -11,13 +11,17 @@ export const filterBySearchingPhrase = (
 type useDeleteProps = {
   query: string;
   afterDeleteFn: VoidFunction;
+  beforeDeleteFn?: VoidFunction;
 };
 
 export const handleDeleteEntity = async ({
   query,
   afterDeleteFn,
+  beforeDeleteFn,
 }: useDeleteProps) => {
   try {
+    beforeDeleteFn && (await beforeDeleteFn());
+
     const response = await fetch(query, {
       method: 'DELETE',
       headers: {

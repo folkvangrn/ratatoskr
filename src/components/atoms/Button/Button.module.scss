@@ -9,4 +9,8 @@
   &:hover {
     background-color: var(--blue);
   }
+
+  &:disabled {
+    background-color: rgba(113, 108, 108, 0.386);
+  }
 }

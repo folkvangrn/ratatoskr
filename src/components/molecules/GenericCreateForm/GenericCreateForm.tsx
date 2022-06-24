@@ -39,12 +39,12 @@ export function GenericCreateForm<T>({
     skip: initialId ? false : true,
   });
 
-  const handleAfterCreate = () => {
-    refetchData();
-    handleCloseModal();
-  };
-
   const handleSubmitForm = async (values: any) => {
+    const handleAfterCreate = () => {
+      refetchData();
+      handleCloseModal();
+    };
+
     console.log(values);
     try {
       const response = await fetch(query, {

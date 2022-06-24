@@ -1,5 +1,6 @@
 import { Dashboard } from '@/components/molecules/Dashboard/Dashboard';
 import { ListWrapper } from '@/components/molecules/ListWrapper/ListWrapper';
+import { useGet } from '@/hooks/useGet';
 import { useModal } from '@/hooks/useModal';
 import { Meal } from '@/types';
 import { useState } from 'react';
@@ -7,49 +8,18 @@ import { filterBySearchingPhrase } from '../helpers';
 import { AddMeal } from './AddMeal';
 import { MealListItem } from './MealListItem';
 
+const GET_MEALS_QUERY = 'http://localhost:8080/take/restaurant/meal';
 export function Meals() {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
   const [searchingPhrase, setSearchingPhrase] = useState<string>('');
   document.title = 'Meals';
 
-  const meals: Meal[] = [
-    {
-      id: 11,
-      price: 22.5,
-      ingredients: [
-        {
-          id: 22,
-          name: 'Bekon',
-          quantity: 10,
-        },
-        {
-          id: 23,
-          name: 'Ser',
-          quantity: 10,
-        },
-      ],
-      name: 'Pizza',
-      availability: true,
-    },
-    {
-      id: 13,
-      price: 22.5,
-      ingredients: [
-        {
-          id: 15,
-          name: 'Salami',
-          quantity: 10,
-        },
-        {
-          id: 14,
-          name: 'Cheddar',
-          quantity: 10,
-        },
-      ],
-      name: 'Spaghetti ',
-      availability: true,
-    },
-  ];
+  const {
+    data: meals = [],
+    error,
+    isLoading,
+    refetchData: refetchMeals,
+  } = useGet<Meal[]>({ query: GET_MEALS_QUERY });
 
   const filteredMeals = meals?.filter(meal =>
     filterBySearchingPhrase(searchingPhrase, [
@@ -69,11 +39,11 @@ export function Meals() {
           <AddMeal
             isOpen={isModalOpen}
             handleCloseModal={handleCloseModal}
-            refetchMeals={() => {}} //TODO: Add refetchClients method
+            refetchMeals={refetchMeals}
           />
         ) : null}
-        {filteredMeals.map(meal => (
-          <MealListItem meal={meal} refetchMeals={() => {}} key={meal.id} />
+        {(filteredMeals || []).map(meal => (
+          <MealListItem meal={meal} refetchMeals={refetchMeals} key={meal.id} />
         ))}
       </ListWrapper>
     </Dashboard>
