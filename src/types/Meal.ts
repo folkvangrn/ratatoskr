@@ -1,9 +1,18 @@
-import { Ingredient } from './Ingredient';
-
 export type Meal = {
   id?: number;
   name: string;
   price: number;
   availability: boolean;
-  ingredients?: Ingredient[];
+  mealIngredients?: MealIngredient[] | null;
+};
+
+type MealIngredientHelper = {
+  id: number;
+};
+
+export type MealIngredient = {
+  id?: number;
+  ingredient: MealIngredientHelper;
+  quantity: number;
+  meal?: MealIngredientHelper;
 };
