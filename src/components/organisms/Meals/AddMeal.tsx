@@ -58,6 +58,7 @@ export function AddMeal({
           `${GET_MEALS_QUERY}/promotions/${mealId}/${discount}`,
           {
             method: 'PUT',
+            //@ts-ignore
             Accept: 'application/json',
             'Content-Type': 'application/json',
           }
@@ -153,8 +154,9 @@ export function AddMeal({
         </option>
       ));
     }
-
+    //@ts-ignore
     const name = meal?.mealIngredients?.[index]?.ingredient?.name!;
+    //@ts-ignore
     const quantity = meal?.mealIngredients?.[index]?.ingredient?.quantity!;
 
     return (
