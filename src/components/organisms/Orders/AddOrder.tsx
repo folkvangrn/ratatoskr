@@ -2,8 +2,9 @@ import { Button } from '@/components/atoms/Button/Button';
 import { FieldArray, Form, Formik } from 'formik';
 import { Grid } from '@material-ui/core';
 import { Modal } from '@/components/molecules/Modal/Modal';
-import { Client, Meal, ClientId } from '@/types';
+import { Client, Meal, ClientId, Order } from '@/types';
 import { SelectFieldInput } from '@/components/atoms/SelectFieldInput/SelectFieldInput';
+import { useGet } from '@/hooks/useGet';
 
 type AddOrderProps = {
   isOpen: boolean;
@@ -12,7 +13,9 @@ type AddOrderProps = {
   refetchOrders: VoidFunction;
 };
 
-const GET_ORDERS_QUERY = 'http://localhost:8000/api/clients';
+const GET_ORDERS_QUERY = 'http://localhost:8080/take/restaurant/order';
+const GET_CLIENTS_QUERY = 'http://localhost:8080/take/restaurant/client';
+const GET_MEALS_QUERY = 'http://localhost:8080/take/restaurant/meal';
 
 export function AddOrder({
   isOpen,
@@ -20,70 +23,12 @@ export function AddOrder({
   orderId,
   refetchOrders,
 }: AddOrderProps) {
-  const meals: Meal[] = [
-    {
-      id: 11,
-      price: 22.5,
-      ingredients: [
-        {
-          id: 22,
-          name: 'Bekon',
-          quantity: 10,
-        },
-        {
-          id: 23,
-          name: 'Ser',
-          quantity: 10,
-        },
-      ],
-      name: 'Pizza',
-      availability: true,
-    },
-    {
-      id: 13,
-      price: 22.5,
-      ingredients: [
-        {
-          id: 15,
-          name: 'Salami',
-          quantity: 10,
-        },
-        {
-          id: 14,
-          name: 'Cheddar',
-          quantity: 10,
-        },
-      ],
-      name: 'Spaghetti ',
-      availability: true,
-    },
-  ];
-
-  const clients: Client[] = [
-    {
-      id: 1,
-      firstName: 'imie',
-      lastName: 'nazwisko',
-      phoneNumber: 'phonenr',
-      address: 'address',
-    },
-    {
-      id: 2,
-
-      firstName: 'lala',
-      lastName: 'nazwisko',
-      phoneNumber: 'phonenr',
-      address: 'address',
-    },
-    {
-      id: 3,
-
-      firstName: 'oke',
-      lastName: 'nazwisko',
-      phoneNumber: 'phonenr',
-      address: 'address',
-    },
-  ];
+  const { data: clients = [] } = useGet<Client[]>({ query: GET_CLIENTS_QUERY });
+  const { data: meals = [] } = useGet<Meal[]>({ query: GET_MEALS_QUERY });
+  const { data: order } = useGet<Order>({
+    query: `${GET_ORDERS_QUERY}/${orderId}`,
+    skip: !orderId,
+  });
 
   type InitializedValues = {
     meals: Meal[];
@@ -95,8 +40,43 @@ export function AddOrder({
     meals: [],
     totalPrice: 0,
     client: {
-      id: clients[0].id!,
+      id: clients?.[0].id!,
     },
+  };
+
+  const initialData = orderId ? { ...order, totalPrice: 0 } : initialValues;
+
+  const handleAddOrder = async (newOrder: any) => {
+    try {
+      const response = await fetch(GET_ORDERS_QUERY, {
+        method: !orderId ? 'POST' : 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...newOrder }),
+      });
+      if (response.status.toString().startsWith('2')) {
+        handleCloseModal();
+        refetchOrders();
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Something went wrong!');
+    }
+  };
+
+  const calculateTotalPrice = (values: any) => {
+    const tMeals = values?.meals;
+    let totalPrice = 0;
+
+    for (let i = 0; i < tMeals?.length; i++) {
+      const id = tMeals[i]?.id || tMeals[i];
+
+      const meal = meals?.find(m => m.id === Number(id));
+      totalPrice += meal?.price!;
+    }
+    return totalPrice;
   };
 
   return (
@@ -108,39 +88,62 @@ export function AddOrder({
       <Formik
         enableReinitialize={true}
         onSubmit={values => {
-          const mealsId = values.meals;
-          const newMeals = mealsId.map(id => {
-            return meals.find(meal => meal.id === Number(id));
+          const clientId = values.client?.id;
+          const tempValues = { ...values };
+          const newMeals = tempValues?.meals?.map(meal => {
+            return {
+              id: Number(meal?.id || meal),
+            };
           });
-          const newValues = { ...values, meals: newMeals };
-          console.log('vv', newValues);
+          const newOrder = {
+            ...tempValues,
+            meals: newMeals,
+            client: { id: clientId },
+          };
+          handleAddOrder(newOrder);
         }}
-        initialValues={initialValues}
+        initialValues={initialData!}
       >
         {({ values, errors }) => (
           <Form style={{ overflowY: 'scroll' }}>
-            <SelectFieldInput name="client.id" label="Client">
-              {clients.map(c => (
-                <option value={Number(c.id)}>
-                  Name: {c.firstName}, surname: {c.lastName}
+            <SelectFieldInput
+              name="client.id"
+              label="Client"
+              disabled={!!orderId}
+            >
+              {orderId ? (
+                <option>
+                  {values?.client?.name!} {values?.client?.surname!}
                 </option>
-              ))}
+              ) : (
+                (clients || [])?.map(c => (
+                  <option value={Number(c.id)}>
+                    {c.name} {c.surname}
+                  </option>
+                ))
+              )}
             </SelectFieldInput>
             <FieldArray name="meals">
               {({ push, remove }) => (
                 <>
-                  {values.meals.map((val, index) => (
+                  {(values?.meals || [])?.map((val, index) => (
                     <Grid container style={{ backgroundColor: 'lightgray' }}>
                       <Grid item>
                         <SelectFieldInput name={`meals[${index}]`} label="Meal">
-                          {meals.map(m => {
-                            values.totalPrice += m.price;
-                            return (
-                              <option value={m.id} key={m.id}>
-                                Name: {m.name}, price:{m.price}
-                              </option>
-                            );
-                          })}
+                          {val?.id ? (
+                            <option value={val?.id} key={`${val?.id}-${index}`}>
+                              Name: {val?.name}, price:{val?.price}
+                            </option>
+                          ) : (
+                            (meals || []).map(m => {
+                              if (m.availability === false) return null;
+                              return (
+                                <option value={m.id} key={`${m.id}-${index}`}>
+                                  Name: {m.name}, price:{m.price}
+                                </option>
+                              );
+                            })
+                          )}
                         </SelectFieldInput>
                         <Button
                           text="Remove meal"
@@ -156,7 +159,7 @@ export function AddOrder({
                     text="Add meal"
                     type="button"
                     onClick={() => {
-                      push(meals[0].id);
+                      push(meals?.[0].id!);
                     }}
                   />
                 </>
@@ -164,18 +167,7 @@ export function AddOrder({
             </FieldArray>
             <p>
               Total price:
-              {
-                (values.totalPrice = values.meals.reduce(
-                  (accumulator: number, currentValue) => {
-                    for (const meal of Object.values(meals)) {
-                      if (meal.id === Number(currentValue))
-                        return (accumulator += meal.price);
-                    }
-                    return accumulator;
-                  },
-                  0
-                ))
-              }
+              {(values.totalPrice = calculateTotalPrice(values))}
             </p>
             <Button type="submit" text="Submit" />
             <Button onClick={handleCloseModal} text="Cancel" />
