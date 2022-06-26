@@ -6,32 +6,20 @@ import { AddOrder } from './AddOrder';
 import { Order } from '@/types/Order';
 import { filterBySearchingPhrase } from '../helpers';
 import { OrderListItem } from './OrderListItem';
+import { useGet } from '@/hooks/useGet';
+const GET_ORDERS_QUERY = 'http://localhost:8080/take/restaurant/order';
 
 export function Orders() {
   const { isModalOpen, handleOpenModal, handleCloseModal } = useModal(false);
   const [searchingPhrase, setSearchingPhrase] = useState<string>('');
   document.title = 'Orders';
 
-  const orders: Order[] = [
-    {
-      id: 11,
-      totalPrice: 22,
-      meals: [],
-      client: {
-        id: 25,
-      },
-    },
-    {
-      id: 13,
-      totalPrice: 55,
-      meals: [],
-    },
-    {
-      id: 15,
-      totalPrice: 44,
-      meals: [],
-    },
-  ];
+  const {
+    data: orders = [],
+    error,
+    isLoading,
+    refetchData: refetchOrders,
+  } = useGet<Order[]>({ query: GET_ORDERS_QUERY });
 
   const filteredOrders = orders?.filter(order =>
     filterBySearchingPhrase(searchingPhrase, [
@@ -39,6 +27,7 @@ export function Orders() {
       order.totalPrice.toString(),
     ])
   );
+  console.log(orders);
 
   return (
     <Dashboard>
@@ -51,13 +40,13 @@ export function Orders() {
           <AddOrder
             isOpen={isModalOpen}
             handleCloseModal={handleCloseModal}
-            refetchOrders={() => {}} //TODO: Add refetchClients method
+            refetchOrders={refetchOrders} //TODO: Add refetchClients method
           />
         ) : null}
-        {filteredOrders.map(order => (
+        {filteredOrders?.map(order => (
           <OrderListItem
             order={order}
-            refetchOrders={() => {}}
+            refetchOrders={refetchOrders}
             key={order.id}
           />
         ))}

@@ -58,6 +58,7 @@ export function AddMeal({
           `${GET_MEALS_QUERY}/promotions/${mealId}/${discount}`,
           {
             method: 'PUT',
+            //@ts-ignore
             Accept: 'application/json',
             'Content-Type': 'application/json',
           }
@@ -153,8 +154,9 @@ export function AddMeal({
         </option>
       ));
     }
-
+    //@ts-ignore
     const name = meal?.mealIngredients?.[index]?.ingredient?.name!;
+    //@ts-ignore
     const quantity = meal?.mealIngredients?.[index]?.ingredient?.quantity!;
 
     return (
@@ -177,7 +179,8 @@ export function AddMeal({
             'Unique',
             'Values need te be unique',
             values => {
-              return new Set(values).size <= ingredients?.length;
+              const ings = values?.map(ing => Number(ing?.ingredient));
+              return new Set(ings).size === values?.length!;
             }
           ),
         })}
