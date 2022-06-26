@@ -5,8 +5,10 @@ Frontend for TAKE project
 
 ### Prerequisites
 
-- [`npm`](https://www.npmjs.com/): >= 8.1.2
+- [`npm`] >= 8.1.2
 - [`node`](https://nodejs.org/en/): >= 16.13.2
+
+Download and install last LTS version
 
 ### Usage
 
